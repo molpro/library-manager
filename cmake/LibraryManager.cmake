@@ -756,7 +756,7 @@ function(__LibraryManager_writePkgConfig target out)
     # Any libraries that are not full paths can be assumed to be a library file
     set(joinedLinkLibRec "")
     foreach (lib IN LISTS linkLibRec)
-        if (IS_ABSOLUTE "${lib}")
+        if (IS_ABSOLUTE "${lib}" OR "${lib}" MATCHES "^-l*")
             set(joinedLinkLibRec "${joinedLinkLibRec} ${lib}")
         else ()
             set(joinedLinkLibRec "${joinedLinkLibRec} -l${lib}")
