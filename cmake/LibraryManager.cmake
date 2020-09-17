@@ -753,9 +753,17 @@ function(__LibraryManager_writePkgConfig target out)
     list(REVERSE linkLibRec)
     list(REMOVE_DUPLICATES linkLibRec)
     list(REVERSE linkLibRec)
+    # Any libraries that are not full paths can be assumed to be a library file
+    set(joinedLinkLibRec "")
+    foreach (lib IN LISTS linkLibRec)
+        if (IS_ABSOLUTE "${lib}")
+            set(joinedLinkLibRec "${joinedLinkLibRec} ${lib}")
+        else ()
+            set(joinedLinkLibRec "${joinedLinkLibRec} -l${lib}")
+        endif ()
+    endforeach ()
     list(JOIN linkOptRec " " linkOptRec)
-    list(JOIN linkLibRec " " linkLibRec)
-    set(libs "${linkOptRec} ${linkLibRec}")
+    set(libs "${linkOptRec} ${joinedLinkLibRec}")
 
     set(content
             "
