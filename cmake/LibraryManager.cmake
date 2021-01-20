@@ -777,6 +777,8 @@ Libs.private:
     string(REPLACE "$<BUILD_INTERFACE:" "$<0:" content "${content}")
     string(REPLACE "$<INSTALL_INTERFACE:" "$<1:" content "${content}")
     string(REPLACE "$<INSTALL_PREFIX>" "${CMAKE_INSTALL_PREFIX}" content "${content}")
+    # work round other bugs
+    string(REGEX REPLACE "-D.*-pthread" "" content "${content}")
     set(${out} "${content}" PARENT_SCOPE)
 endfunction()
 
