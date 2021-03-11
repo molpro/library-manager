@@ -9,7 +9,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
-#set(BLA_VENDOR OpenBLAS)
+set(BLA_VENDOR OpenBLAS)
 #set(BLA_VENDOR Apple)
 #set(BLA_VENDOR Intel10_64lp)
 #set(BLA_VENDOR Intel10_64lp_seq)
