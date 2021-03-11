@@ -1,0 +1,48 @@
+enable_language(CXX)
+include(FetchContent)
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG "release-1.10.0"
+)
+FetchContent_MakeAvailable(googletest)
+include(GoogleTest)
+
+#set(BLA_VENDOR OpenBLAS)
+#set(BLA_VENDOR Apple)
+#set(BLA_VENDOR Intel10_64lp)
+#set(BLA_VENDOR Intel10_64lp_seq)
+#set(BLA_VENDOR Intel10_64dyn)
+#set(BLA_VENDOR Intel10_64ilp)
+
+
+add_library(libtestblas INTERFACE)
+message(STATUS "Preferred BLAS ${BLA_VENDOR}")
+LibraryManager_BLAS(libtestblas INTERFACE ${BLA_VENDOR})
+include(LibraryManagerUtils)
+print_target_properties(BLAS::BLAS)
+print_variable(MKL)
+print_variable(MKL_TYPE)
+print_variable(BLA_VENDOR_FOUND)
+add_executable(testblas testblas.cpp)
+set_property(TARGET testblas PROPERTY CXX_STANDARD 17)
+target_compile_definitions(testblas PRIVATE -DBLA_VENDOR="${BLA_VENDOR}")
+target_link_libraries(testblas PRIVATE libtestblas gmock_main)
+gtest_discover_tests(testblas)
+add_test(testblas testblas)
+
+add_library(libtestlapack INTERFACE)
+message(STATUS "Preferred LAPACK ${BLA_VENDOR}")
+LibraryManager_LAPACK(libtestlapack INTERFACE ${BLA_VENDOR})
+include(LibraryManagerUtils)
+print_target_properties(LAPACK::LAPACK)
+print_variable(MKL)
+print_variable(MKL_TYPE)
+print_variable(BLA_VENDOR_FOUND)
+add_executable(testlapack testLAPACK.cpp)
+set_property(TARGET testlapack PROPERTY CXX_STANDARD 17)
+target_compile_definitions(testlapack PRIVATE -DBLA_VENDOR="${BLA_VENDOR}")
+target_link_libraries(testlapack PRIVATE libtestlapack gmock_main)
+gtest_discover_tests(testlapack)
+add_test(testlapack testlapack)
