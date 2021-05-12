@@ -9,6 +9,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
+
+if (EXISTS /opt/intel/oneapi OR EXISTS /opt/intel/mkl)
+    unset(ENV{MKLROOT}) # let the defaults do work
+endif ()
+
+include(LibraryManagerUtils)
 #set(BLA_VENDOR OpenBLAS)
 #set(BLA_VENDOR Apple)
 #set(BLA_VENDOR Intel10_64lp)
@@ -20,7 +26,6 @@ include(GoogleTest)
 add_library(libtestblas INTERFACE)
 message(STATUS "Preferred BLAS ${BLA_VENDOR}")
 LibraryManager_BLAS(libtestblas INTERFACE ${BLA_VENDOR})
-include(LibraryManagerUtils)
 print_target_properties(BLAS::BLAS)
 print_variable(MKL)
 print_variable(MKL_TYPE)
