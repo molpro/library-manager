@@ -523,7 +523,8 @@ if(BLA_VENDOR MATCHES "Intel" OR BLA_VENDOR STREQUAL "All")
           "compiler/lib/${BLAS_mkl_ARCH_NAME}"
           "mkl/lib" "mkl/lib/${BLAS_mkl_ARCH_NAME}_${BLAS_mkl_OS_NAME}"
           "mkl/lib/${BLAS_mkl_ARCH_NAME}"
-          "lib/${BLAS_mkl_ARCH_NAME}_${BLAS_mkl_OS_NAME}")
+#          "lib/${BLAS_mkl_ARCH_NAME}_${BLAS_mkl_OS_NAME}")
+          "lib" "lib/${BLAS_mkl_ARCH_NAME}_${BLAS_mkl_OS_NAME}") # patched to discover oneapi
 
       foreach(IT ${BLAS_SEARCH_LIBS})
         string(REPLACE " " ";" SEARCH_LIBS ${IT})
