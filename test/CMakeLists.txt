@@ -51,3 +51,20 @@ target_compile_definitions(testlapack PRIVATE -DBLA_VENDOR="${BLA_VENDOR}")
 target_link_libraries(testlapack PRIVATE libtestlapack gmock_main)
 gtest_discover_tests(testlapack)
 add_test(testlapack testlapack)
+
+find_package(Eigen3 3.3 NO_MODULE)
+if (TARGET Eigen3::Eigen)
+    print_target_properties(Eigen3::Eigen)
+    add_executable(testeigen testeigen.cpp)
+    set_property(TARGET testeigen PROPERTY CXX_STANDARD 17)
+    target_compile_definitions(testeigen PRIVATE -DBLA_VENDOR="${BLA_VENDOR}")
+    #    add_library(libtesteigen INTERFACE)
+    #    target_link_libraries(libtesteigen INTERFACE Eigen3:Eigen)
+    #    print_target_properties(libtesteigen)
+    target_link_libraries(testeigen PRIVATE
+            Eigen3:Eigen
+            LAPACK::LAPACK BLAS::BLAS
+            gmock_main)
+    gtest_discover_tests(testeigen)
+    add_test(testeigen testeigen)
+endif ()
