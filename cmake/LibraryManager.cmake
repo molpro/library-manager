@@ -464,6 +464,9 @@ macro(__LibraryManager_findBLASorLAPACK name)
 
         unset(${name}_FOUND)
         foreach (BLA_VENDOR ${vendors} "")
+            if (BLA_VENDOR STREQUAL "Apple" AND "${name}" STREQUAL "LAPACK")
+                set(BLA_VENDOR "OpenBLAS") # Accelerate does not provide lapacke, so get it elsewhere
+            endif ()
             message(DEBUG "try BLA_VENDOR ${BLA_VENDOR}")
             if (BLA_VENDOR STREQUAL "OpenBLAS" OR BLA_VENDOR STREQUAL "")
                 list(APPEND CMAKE_LIBRARY_PATH "/usr/local/opt/openblas/lib")

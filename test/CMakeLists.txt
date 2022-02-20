@@ -15,6 +15,12 @@ if (EXISTS /opt/intel/oneapi OR EXISTS /opt/intel/mkl)
 endif ()
 
 include(LibraryManagerUtils)
+
+if (APPLE)
+    set(BLA_VENDOR Apple)
+endif ()
+# set one of the following manually for further testing
+#set(BLA_VENDOR Generic)
 #set(BLA_VENDOR OpenBLAS)
 #set(BLA_VENDOR Apple)
 #set(BLA_VENDOR Intel10_64lp)
@@ -52,18 +58,24 @@ target_link_libraries(testlapack PRIVATE libtestlapack gmock_main)
 gtest_discover_tests(testlapack)
 add_test(testlapack testlapack)
 
+add_executable(testblaslapack testblaslapack.cpp)
+set_property(TARGET testblaslapack PROPERTY CXX_STANDARD 17)
+target_compile_definitions(testblaslapack PRIVATE -DBLA_VENDOR="${BLA_VENDOR}")
+target_link_libraries(testblaslapack PRIVATE BLAS::BLAS LAPACK::LAPACK gmock_main)
+gtest_discover_tests(testblaslapack)
+add_test(testblaslapack testblaslapack)
+
 find_package(Eigen3 3.3 NO_MODULE)
 if (TARGET Eigen3::Eigen)
     print_target_properties(Eigen3::Eigen)
     add_executable(testeigen testeigen.cpp)
     set_property(TARGET testeigen PROPERTY CXX_STANDARD 17)
     target_compile_definitions(testeigen PRIVATE -DBLA_VENDOR="${BLA_VENDOR}")
-    #    add_library(libtesteigen INTERFACE)
-    #    target_link_libraries(libtesteigen INTERFACE Eigen3:Eigen)
-    #    print_target_properties(libtesteigen)
-    target_link_libraries(testeigen PRIVATE
-            Eigen3:Eigen
-            LAPACK::LAPACK BLAS::BLAS
+    target_compile_definitions(testeigen PRIVATE -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE)
+    target_link_libraries(testeigen PUBLIC
+            BLAS::BLAS
+            LAPACK::LAPACK
+            Eigen3::Eigen
             gmock_main)
     gtest_discover_tests(testeigen)
     add_test(testeigen testeigen)
