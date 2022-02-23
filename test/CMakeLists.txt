@@ -17,7 +17,8 @@ endif ()
 include(LibraryManagerUtils)
 
 if (APPLE)
-    set(PREFERRED_BLAS Apple)
+#    set(PREFERRED_BLAS Intel10_64lp Apple)
+#    set(PREFERRED_BLAS Apple)
 #    set(PREFERRED_LAPACK OpenBLAS)
 endif ()
 # set one of the following manually for further testing
@@ -28,7 +29,7 @@ endif ()
 #set(PREFERRED_BLAS Intel10_64lp_seq)
 #set(PREFERRED_BLAS Intel10_64dyn)
 #set(PREFERRED_BLAS Intel10_64ilp)
-if (NOT PREFERRED_LAPACK)
+if (NOT PREFERRED_LAPACK AND PREFERRED_BLAS)
     set(PREFERRED_LAPACK ${PREFERRED_BLAS})
 endif ()
 
