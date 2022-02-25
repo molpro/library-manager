@@ -17,9 +17,9 @@ endif ()
 include(LibraryManagerUtils)
 
 if (APPLE)
-#    set(PREFERRED_BLAS Intel10_64lp Apple)
-#    set(PREFERRED_BLAS Apple)
-#    set(PREFERRED_LAPACK OpenBLAS)
+    #    set(PREFERRED_BLAS Intel10_64lp Apple)
+    #    set(PREFERRED_BLAS Apple)
+    #    set(PREFERRED_LAPACK OpenBLAS)
 endif ()
 # set one of the following manually for further testing
 #set(PREFERRED_BLAS Generic)
@@ -48,10 +48,11 @@ target_link_libraries(testblas PRIVATE libtestblas gmock_main)
 gtest_discover_tests(testblas)
 add_test(testblas testblas)
 
-add_library(libtestlapack INTERFACE)
 message(STATUS "Preferred LAPACK ${PREFERRED_LAPACK}")
+add_library(libtestlapack INTERFACE)
 LibraryManager_LAPACK(libtestlapack INTERFACE ${PREFERRED_LAPACK})
 include(LibraryManagerUtils)
+print_target_properties(libtestlapack)
 print_target_properties(LAPACK::LAPACK)
 print_variable(MKL)
 print_variable(MKL_TYPE)
@@ -66,7 +67,7 @@ add_test(testlapack testlapack)
 add_executable(testblaslapack testblaslapack.cpp)
 set_property(TARGET testblaslapack PROPERTY CXX_STANDARD 17)
 target_compile_definitions(testblaslapack PRIVATE -DBLA_VENDOR="${BLA_VENDOR_FOUND}")
-target_link_libraries(testblaslapack PRIVATE BLAS::BLAS LAPACK::LAPACK gmock_main)
+target_link_libraries(testblaslapack PRIVATE BLAS::BLAS libtestlapack gmock_main)
 gtest_discover_tests(testblaslapack)
 add_test(testblaslapack testblaslapack)
 
@@ -77,7 +78,6 @@ if (TARGET Eigen3::Eigen)
     set_property(TARGET testeigen PROPERTY CXX_STANDARD 17)
     target_compile_definitions(testeigen PRIVATE -DBLA_VENDOR="${BLA_VENDOR_FOUND}")
     target_link_libraries(testeigen PUBLIC
-            BLAS::BLAS
             LAPACK::LAPACK
             Eigen3::Eigen
             gmock_main)
