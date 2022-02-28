@@ -11,6 +11,9 @@ TEST(LibraryManager, blas_and_lapack) {
 #ifndef HAVE_LAPACKE
 #error "Missing lapacke support"
 #endif
+#ifndef HAVE_CBLAS
+#error "Missing cblas support"
+#endif
 
   std::cout << "Test BLAS and Lapack with BLAS/LAPACK library " << BLA_VENDOR << std::endl;
   double a[5][3] = {1, 1, 1, 2, 3, 4, 3, 5, 2, 4, 2, 5, 5, 4, 3};
