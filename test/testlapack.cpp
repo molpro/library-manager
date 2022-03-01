@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "lapacke.h"
+#include "molpro/lapacke.h"
 #include <vector>
 using ::testing::HasSubstr;
 

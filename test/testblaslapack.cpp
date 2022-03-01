@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "lapacke.h"
-#include "cblas.h"
+#include "molpro/lapacke.h"
+#include "molpro/cblas.h"
 #include <vector>
 #include <chrono>
 

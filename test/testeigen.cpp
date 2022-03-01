@@ -1,5 +1,5 @@
-#include "cblas.h"
-#include "lapacke.h"
+#include "molpro/cblas.h"
+#include "molpro/lapacke.h"
 #include <Eigen/Dense>
 #include <chrono>
 #include <gmock/gmock.h>

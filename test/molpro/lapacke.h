@@ -10,10 +10,6 @@
 #define HAVE_MKL
 #define HAVE_LAPACKE
 #elif __has_include(<lapacke.h>)
-#if __has_include(<Accelerate/Accelerate.h>) && ! defined(NO_USE_ACCELERATE)
-#define __CLAPACK_H
-#include <Accelerate/Accelerate.h>
-#endif
 #include <lapacke.h>
 #define HAVE_LAPACKE
 #endif

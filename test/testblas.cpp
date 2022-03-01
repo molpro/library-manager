@@ -1,4 +1,4 @@
-#include "cblas.h"
+#include "molpro/cblas.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <vector>
