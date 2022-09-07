@@ -111,6 +111,11 @@ macro(_semver)
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
                     OUTPUT_VARIABLE PROJECT_VERSION)
+            execute_process(
+                    COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    OUTPUT_VARIABLE PROJECT_VERSION_FULL)
         endif ()
     endif ()
 
@@ -125,6 +130,7 @@ macro(_semver)
 PROJECT_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
 PROJECT_VERSION_MINOR=${PROJECT_VERSION_MINOR}
 PROJECT_VERSION_PATCH=${PROJECT_VERSION_PATCH}
+PROJECT_VERSION_FULL=${PROJECT_VERSION_FULL}
 ")
     if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build" FORCE)
