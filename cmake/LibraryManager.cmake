@@ -33,8 +33,6 @@ List of Functions:
 .. code-block:: cmake
 
     LibraryManager_Project(
-                       [VERSION version]
-                       [DEFAULT_VERSION version]
                        [MPI_OPTION]
                        [FORTRAN_OPTION]
                        )
@@ -54,11 +52,11 @@ If using this option, do not previously declare ``Fortran`` as a language in the
 #Could be argument MPI with values ON OFF OPTIONAL?
 #Or a second boolean argument MPI? But maybe need to then pass options for FindMPI
 
-As well as processing these options, the function also sets ``PROJECT_VERSION`` and its subcomponent variables using any defined git tags that look like semantic version numbers, and sets up the environment of the ``LibraryManager`` module, so should always be called. If the option ``DEFAULT_VERSION`` is given, its value will be used when git discovery is not available; if ``VERSION`` is given, its value will always be used in preference to git.
+As well as processing these options, the function also sets ``CMAKE_PROJECT_VERSION`` and its subcomponent variables using any defined git tags that look like semantic version numbers, and sets up the environment of the ``LibraryManager`` module, so should always be called.
 
 #]=============================================================================]
 macro(LibraryManager_Project)
-    cmake_parse_arguments("ARG" "VERSION;DEFAULT_VERSION;MPI_OPTION;FORTRAN_OPTION" "" "" ${ARGN})
+    cmake_parse_arguments("ARG" "MPI_OPTION;FORTRAN_OPTION" "" "" ${ARGN})
 
     if (ARG_FORTRAN_OPTION)
         option(FORTRAN "Whether to build fortran sources" ON)
@@ -99,16 +97,15 @@ macro(LibraryManager_Project)
 endmacro()
 
 macro(_semver)
-    if (ARG_VERSION)
-        set(PROJECT_VERSION "${ARG_VERSION}")
-    else ()
-        if (ARG_DEFAULT_VERSION)
-            set(PROJECT_VERSION "${ARG_DEFAULT_VERSION}")
-        else ()
-            set(PROJECT_VERSION "0.0.0")
-        endif ()
-        find_package(Git)
-        if (Git_FOUND)
+    set(PROJECT_VERSION "0.0.0")
+    find_package(Git)
+    if (Git_FOUND)
+        execute_process(
+                COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                OUTPUT_VARIABLE __GITDIR)
+        if (__GITDIR STREQUAL "true")
             execute_process(
                     COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
