@@ -97,16 +97,23 @@ macro(LibraryManager_Project)
 endmacro()
 
 macro(_semver)
+    set(PROJECT_VERSION "0.0.0")
     find_package(Git)
     if (Git_FOUND)
         execute_process(
-                COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
+                COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE PROJECT_VERSION)
-    else ()
-        set(PROJECT_VERSION "0.0.0")
+                OUTPUT_VARIABLE __GITDIR)
+        if (__GITDIR STREQUAL "true")
+            execute_process(
+                    COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                    OUTPUT_VARIABLE PROJECT_VERSION)
+        endif ()
     endif ()
+
     string(REGEX REPLACE "^[^0-9]+" "" PROJECT_VERSION "${PROJECT_VERSION}") # strip leading alphabetic
     string(REGEX REPLACE "^.*[^0-9.].*\$" "0.0.0" PROJECT_VERSION "${PROJECT_VERSION}") # bail out if not semver
 
