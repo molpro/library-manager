@@ -117,7 +117,7 @@ macro(_semver)
                     OUTPUT_VARIABLE __GITDIR
                     ERROR_QUIET)
             execute_process(
-                    COMMAND ${GIT_EXECUTABLE} rev-parse --show-top-level
+                    COMMAND ${GIT_EXECUTABLE} rev-parse --show-toplevel
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
                     OUTPUT_VARIABLE __GITTOP
