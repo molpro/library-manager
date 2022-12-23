@@ -115,12 +115,14 @@ macro(_semver)
                     COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
-                    OUTPUT_VARIABLE __GITDIR)
+                    OUTPUT_VARIABLE __GITDIR
+                    ERROR_QUIET)
             execute_process(
                     COMMAND ${GIT_EXECUTABLE} rev-parse --show-top-level
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
-                    OUTPUT_VARIABLE __GITTOP)
+                    OUTPUT_VARIABLE __GITTOP
+                    ERROR_QUIET)
             if (__GITDIR STREQUAL "true" AND (__GITTOP STREQUAL "${PROJECT_SOURCE_DIR}" OR NOT PROJECT_SOURCE_DIR))
                 execute_process(
                         COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
