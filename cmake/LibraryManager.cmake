@@ -33,6 +33,8 @@ List of Functions:
 .. code-block:: cmake
 
     LibraryManager_Project(
+                       [VERSION version]
+                       [DEFAULT_VERSION version]
                        [MPI_OPTION]
                        [FORTRAN_OPTION]
                        )
@@ -52,11 +54,10 @@ If using this option, do not previously declare ``Fortran`` as a language in the
 #Could be argument MPI with values ON OFF OPTIONAL?
 #Or a second boolean argument MPI? But maybe need to then pass options for FindMPI
 
-As well as processing these options, the function also sets ``CMAKE_PROJECT_VERSION`` and its subcomponent variables using any defined git tags that look like semantic version numbers, and sets up the environment of the ``LibraryManager`` module, so should always be called.
-
+As well as processing these options, the function also sets ``PROJECT_VERSION`` and its subcomponent variables using any defined git tags that look like semantic version numbers, and sets up the environment of the ``LibraryManager`` module, so should always be called. If the option ``DEFAULT_VERSION`` is given, its value will be used when git discovery is not available; if ``VERSION`` is given, its value will always be used in preference to git.
 #]=============================================================================]
 macro(LibraryManager_Project)
-    cmake_parse_arguments("ARG" "MPI_OPTION;FORTRAN_OPTION" "" "" ${ARGN})
+    cmake_parse_arguments("ARG" "MPI_OPTION;FORTRAN_OPTION" "VERSION;DEFAULT_VERSION" "" ${ARGN})
 
     if (ARG_FORTRAN_OPTION)
         option(FORTRAN "Whether to build fortran sources" ON)
@@ -97,25 +98,42 @@ macro(LibraryManager_Project)
 endmacro()
 
 macro(_semver)
-    set(PROJECT_VERSION "0.0.0")
-    find_package(Git)
-    if (Git_FOUND)
-        execute_process(
-                COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE __GITDIR)
-        if (__GITDIR STREQUAL "true")
+    if (ARG_VERSION)
+        set(PROJECT_VERSION "${ARG_VERSION}")
+        set(PROJECT_VERSION_FULL "${PROJECT_VERSION}")
+    else ()
+        if (ARG_DEFAULT_VERSION)
+            set(PROJECT_VERSION "${ARG_DEFAULT_VERSION}")
+        else ()
+            set(PROJECT_VERSION "0.0.0")
+        endif ()
+        set(PROJECT_VERSION_FULL "${PROJECT_VERSION}")
+        find_package(Git)
+        if (Git_FOUND)
             execute_process(
-                    COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
+                    COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
-                    OUTPUT_VARIABLE PROJECT_VERSION)
+                    OUTPUT_VARIABLE __GITDIR
+                    ERROR_QUIET)
             execute_process(
-                    COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty
+                    COMMAND ${GIT_EXECUTABLE} rev-parse --show-top-level
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
-                    OUTPUT_VARIABLE PROJECT_VERSION_FULL)
+                    OUTPUT_VARIABLE __GITTOP
+                    ERROR_QUIET)
+            if (__GITDIR STREQUAL "true" AND (__GITTOP STREQUAL "${PROJECT_SOURCE_DIR}" OR NOT PROJECT_SOURCE_DIR))
+                execute_process(
+                        COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        OUTPUT_STRIP_TRAILING_WHITESPACE
+                        OUTPUT_VARIABLE PROJECT_VERSION)
+                execute_process(
+                        COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        OUTPUT_STRIP_TRAILING_WHITESPACE
+                        OUTPUT_VARIABLE PROJECT_VERSION_FULL)
+            endif ()
         endif ()
     endif ()
 
