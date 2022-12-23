@@ -186,6 +186,8 @@
 <dd></dd></dl>
 
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">LibraryManager_Project(</span><span class="w"></span>
+<span class="w">                   </span><span class="p">[</span><span class="no">VERSION</span><span class="w"> </span><span class="nb">version</span><span class="p">]</span><span class="w"></span>
+<span class="w">                   </span><span class="p">[</span><span class="no">DEFAULT_VERSION</span><span class="w"> </span><span class="nb">version</span><span class="p">]</span><span class="w"></span>
 <span class="w">                   </span><span class="p">[</span><span class="no">MPI_OPTION</span><span class="p">]</span><span class="w"></span>
 <span class="w">                   </span><span class="p">[</span><span class="no">FORTRAN_OPTION</span><span class="p">]</span><span class="w"></span>
 <span class="w">                   </span><span class="nf">)</span><span class="w"></span>
@@ -202,7 +204,7 @@ If using this option, do not previously declare <code class="docutils literal no
 #TODO do we want to configure MPI here, or leave it to the user?
 #Could be argument MPI with values ON OFF OPTIONAL?
 #Or a second boolean argument MPI? But maybe need to then pass options for FindMPI</p>
-<p>As well as processing these options, the function also sets <code class="docutils literal notranslate"><span class="pre">CMAKE_PROJECT_VERSION</span></code> and its subcomponent variables using any defined git tags that look like semantic version numbers, and sets up the environment of the <code class="docutils literal notranslate"><span class="pre">LibraryManager</span></code> module, so should always be called.</p>
+<p>As well as processing these options, the function also sets <code class="docutils literal notranslate"><span class="pre">PROJECT_VERSION</span></code> and its subcomponent variables using any defined git tags that look like semantic version numbers, and sets up the environment of the <code class="docutils literal notranslate"><span class="pre">LibraryManager</span></code> module, so should always be called. If the option <code class="docutils literal notranslate"><span class="pre">DEFAULT_VERSION</span></code> is given, its value will be used when git discovery is not available; if <code class="docutils literal notranslate"><span class="pre">VERSION</span></code> is given, its value will always be used in preference to git.</p>
 <dl class="cmake command">
 <dt class="sig sig-object cmake" id="command:librarymanager_add">
 <span class="sig-name descname"><span class="pre">LibraryManager_Add</span></span><a class="headerlink" href="#command:librarymanager_add" title="Permalink to this definition">¶</a></dt>
