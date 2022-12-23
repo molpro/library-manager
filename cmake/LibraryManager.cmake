@@ -97,25 +97,38 @@ macro(LibraryManager_Project)
 endmacro()
 
 macro(_semver)
-    set(PROJECT_VERSION "0.0.0")
-    find_package(Git)
-    if (Git_FOUND)
-        execute_process(
-                COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE __GITDIR)
-        if (__GITDIR STREQUAL "true")
+    if (ARG_VERSION)
+        set(PROJECT_VERSION "${ARG_VERSION}")
+    else ()
+        if (ARG_DEFAULT_VERSION)
+            set(PROJECT_VERSION "${ARG_DEFAULT_VERSION}")
+        else ()
+            set(PROJECT_VERSION "0.0.0")
+        endif ()
+        find_package(Git)
+        if (Git_FOUND)
             execute_process(
-                    COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
+                    COMMAND ${GIT_EXECUTABLE} rev-parse --is-inside-work-tree
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
-                    OUTPUT_VARIABLE PROJECT_VERSION)
+                    OUTPUT_VARIABLE __GITDIR)
             execute_process(
-                    COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty
+                    COMMAND ${GIT_EXECUTABLE} rev-parse --show-top-level
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
-                    OUTPUT_VARIABLE PROJECT_VERSION_FULL)
+                    OUTPUT_VARIABLE __GITTOP)
+            if (__GITDIR STREQUAL "true" AND (__GITTOP STREQUAL "${PROJECT_SOURCE_DIR}" OR NOT PROJECT_SOURCE_DIR))
+                execute_process(
+                        COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        OUTPUT_STRIP_TRAILING_WHITESPACE
+                        OUTPUT_VARIABLE PROJECT_VERSION)
+                execute_process(
+                        COMMAND ${GIT_EXECUTABLE} describe --tags --always --dirty
+                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                        OUTPUT_STRIP_TRAILING_WHITESPACE
+                        OUTPUT_VARIABLE PROJECT_VERSION_FULL)
+            endif ()
         endif ()
     endif ()
 
