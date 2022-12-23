@@ -57,7 +57,7 @@ If using this option, do not previously declare ``Fortran`` as a language in the
 As well as processing these options, the function also sets ``PROJECT_VERSION`` and its subcomponent variables using any defined git tags that look like semantic version numbers, and sets up the environment of the ``LibraryManager`` module, so should always be called. If the option ``DEFAULT_VERSION`` is given, its value will be used when git discovery is not available; if ``VERSION`` is given, its value will always be used in preference to git.
 #]=============================================================================]
 macro(LibraryManager_Project)
-    cmake_parse_arguments("ARG" "VERSION;DEFAULT_VERSION;MPI_OPTION;FORTRAN_OPTION" "" "" ${ARGN})
+    cmake_parse_arguments("ARG" "MPI_OPTION;FORTRAN_OPTION" "VERSION;DEFAULT_VERSION" "" ${ARGN})
 
     if (ARG_FORTRAN_OPTION)
         option(FORTRAN "Whether to build fortran sources" ON)
