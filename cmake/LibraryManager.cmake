@@ -115,14 +115,19 @@ macro(_semver)
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
                     OUTPUT_VARIABLE __GITDIR
-                    ERROR_QUIET)
+                    ERROR_QUIET
+            )
             execute_process(
                     COMMAND ${GIT_EXECUTABLE} rev-parse --show-toplevel
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
                     OUTPUT_VARIABLE __GITTOP
-                    ERROR_QUIET)
+                    ERROR_QUIET
+            )
+            message(DEBUG "__GITDIR=${__GITDIR}")
+            message(DEBUG "__GITTOP=${__GITTOP}")
             if (__GITDIR STREQUAL "true" AND (__GITTOP STREQUAL "${PROJECT_SOURCE_DIR}" OR NOT PROJECT_SOURCE_DIR))
+                message(DEBUG "Invoking git describe")
                 execute_process(
                         COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
                         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -133,17 +138,24 @@ macro(_semver)
                         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                         OUTPUT_STRIP_TRAILING_WHITESPACE
                         OUTPUT_VARIABLE PROJECT_VERSION_FULL)
+            else()
+                message(DEBUG "Not invoking git describe")
             endif ()
         endif ()
     endif ()
 
-    if (PROJECT_VERSION STREQUAL "")
-        set(PROJECT_VERSION "0.0.0")
-        set(PROJECT_VERSION_FULL "unknown")
-    endif ()
+    message(DEBUG "PROJECT_VERSION before clean-up ${PROJECT_VERSION}")
 
     string(REGEX REPLACE "^[^0-9]+" "" PROJECT_VERSION "${PROJECT_VERSION}") # strip leading alphabetic
     string(REGEX REPLACE "^.*[^0-9.].*\$" "0.0.0" PROJECT_VERSION "${PROJECT_VERSION}") # bail out if not semver
+    message(DEBUG "PROJECT_VERSION after clean-up ${PROJECT_VERSION}")
+
+    if (PROJECT_VERSION STREQUAL "")
+        set(PROJECT_VERSION "0.0.0")
+        set(PROJECT_VERSION_FULL "unknown")
+        message(DEBUG "PROJECT_VERSION after sanitise: ${PROJECT_VERSION}")
+    endif ()
+
 
     string(REGEX REPLACE "([0-9]+)\.([0-9]+)\.([0-9]+)" "\\1" PROJECT_VERSION_MAJOR "${PROJECT_VERSION}")
     string(REGEX REPLACE "([0-9]+)\.([0-9]+)\.([0-9]+)" "\\2" PROJECT_VERSION_MINOR "${PROJECT_VERSION}")
