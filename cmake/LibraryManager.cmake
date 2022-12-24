@@ -115,14 +115,19 @@ macro(_semver)
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
                     OUTPUT_VARIABLE __GITDIR
-                    ERROR_QUIET)
+#                    ERROR_QUIET
+            )
             execute_process(
                     COMMAND ${GIT_EXECUTABLE} rev-parse --show-toplevel
                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                     OUTPUT_STRIP_TRAILING_WHITESPACE
                     OUTPUT_VARIABLE __GITTOP
-                    ERROR_QUIET)
+#                    ERROR_QUIET
+            )
+            message(DEBUG "__GITDIR=${__GITDIR}")
+            message(DEBUG "__GITTOP=${__GITTOP}")
             if (__GITDIR STREQUAL "true" AND (__GITTOP STREQUAL "${PROJECT_SOURCE_DIR}" OR NOT PROJECT_SOURCE_DIR))
+                message(DEBUG "Invoking git describe")
                 execute_process(
                         COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0 --always HEAD
                         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -133,6 +138,8 @@ macro(_semver)
                         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                         OUTPUT_STRIP_TRAILING_WHITESPACE
                         OUTPUT_VARIABLE PROJECT_VERSION_FULL)
+            else()
+                message(DEBUG "Not invoking git describe")
             endif ()
         endif ()
     endif ()
