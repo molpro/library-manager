@@ -137,6 +137,11 @@ macro(_semver)
         endif ()
     endif ()
 
+    if (PROJECT_VERSION STREQUAL "")
+        set(PROJECT_VERSION "0.0.0")
+        set(PROJECT_VERSION_FULL "unknown")
+    endif ()
+
     string(REGEX REPLACE "^[^0-9]+" "" PROJECT_VERSION "${PROJECT_VERSION}") # strip leading alphabetic
     string(REGEX REPLACE "^.*[^0-9.].*\$" "0.0.0" PROJECT_VERSION "${PROJECT_VERSION}") # bail out if not semver
 
