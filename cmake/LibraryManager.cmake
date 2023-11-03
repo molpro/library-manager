@@ -567,6 +567,7 @@ macro(__LibraryManager_findBLASorLAPACK name)
 
                 if ("${name}" STREQUAL "BLAS")
                 endif ()
+                message("testing for lapack ${name}")
                 if ("${name}" STREQUAL "LAPACK")
                     target_compile_definitions(${name}::${name} INTERFACE -DEIGEN_USE_LAPACKE)
                     if ("${BLA_VENDOR_FOUND}" STREQUAL "Apple" OR "${BLA_VENDOR_FOUND}" STREQUAL "OpenBLAS" OR LAPACK_LIBRARIES MATCHES "liblapack.") # special subversion to use generic lapacke together with Accelerate or generic
