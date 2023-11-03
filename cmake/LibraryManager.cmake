@@ -615,10 +615,8 @@ macro(__LibraryManager_findBLASorLAPACK name)
 
                 if ("${name}" STREQUAL "BLAS")
                 endif ()
-                message("testing for lapack ${name}")
                 if ("${name}" STREQUAL "LAPACK")
                     target_compile_definitions(${name}::${name} INTERFACE -DEIGEN_USE_LAPACKE)
-                    message("BLA_VENDOR_FOUND ${BLA_VENDOR_FOUND} LAPACK_LIBRARIES ${LAPACK_LIBRARIES}")
                     if ("${BLA_VENDOR_FOUND}" STREQUAL "Apple" OR "${BLA_VENDOR_FOUND}" STREQUAL "OpenBLAS" OR LAPACK_LIBRARIES MATCHES "liblapack.|lapack") # special subversion to use generic lapacke together with Accelerate or generic
                         if (APPLE AND "$ENV{HOMEBREW_PREFIX}" STREQUAL "")
                             execute_process(COMMAND brew --prefix OUTPUT_VARIABLE _homebrew_prefix)
