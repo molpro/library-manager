@@ -10,8 +10,8 @@
 #define HAVE_CBLAS
 #define HAVE_MKL
 #elif __has_include(<Accelerate/../Frameworks/vecLib.framework/Headers/cblas.h>)
-#include "/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers/cblas.h"
-//#include <Accelerate/../Frameworks/vecLib.framework/Headers/cblas.h>
+//#include "/Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers/cblas.h"
+#include <Accelerate/../Frameworks/vecLib.framework/Headers/cblas.h>
 #define HAVE_CBLAS
 #define HAVE_ACCELERATE
 #elif __has_include(<cblas.h>)
