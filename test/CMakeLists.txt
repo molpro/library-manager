@@ -86,9 +86,8 @@ if (TARGET Eigen3::Eigen)
 endif ()
 
 LibraryManager_Add(lib NAMESPACE molpro molpro/lib.cpp molpro/lib.h)
-target_sources(molpro-lib PUBLIC molpro/lib.h)
-target_sources(molpro-lib PRIVATE molpro/lib.cpp)
-get_target_property(libname molpro-lib $<TARGET_FILE>)
+target_sources(lib PUBLIC molpro/lib.h)
+target_sources(lib PRIVATE molpro/lib.cpp)
 
 add_executable(testlib testlib.cpp)
 target_link_libraries(testlib PRIVATE molpro::lib gmock_main)
