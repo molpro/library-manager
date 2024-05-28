@@ -146,6 +146,7 @@ During installation path to each header will remap <code class="docutils literal
 Defaults to <code class="docutils literal notranslate"><span class="pre">${CMAKE_CURRENT_SOURCE_DIR}</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;nameSpace&gt;</span></code> is the name space for the target alias. Outside users will use library as <code class="docutils literal notranslate"><span class="pre">&lt;nameSpace&gt;::&lt;target&gt;</span></code>.
 This should match the value set in <span class="target" id="index-1-command:librarymanager_export"></span><a class="reference internal" href="#command:librarymanager_export" title="librarymanager_export"><code class="xref cmake cmake-command docutils literal notranslate"><span class="pre">LibraryManager_Export()</span></code></a>.
+If specified, the target name for the library is <code class="docutils literal notranslate"><span class="pre">&lt;nameSpace&gt;-&lt;target&gt;</span></code>, to ensure that namespacing occurs on the library file name to avoid possible conflicts.
 Default:  no namespacing is used.</p>
 <p><code class="docutils literal notranslate"><span class="pre">SOURCES</span></code> is followed by a list of source files, which will be appended to
 <code class="docutils literal notranslate"><span class="pre">SOURCES</span></code> property of the library.</p>
