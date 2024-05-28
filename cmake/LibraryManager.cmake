@@ -201,6 +201,7 @@ Defaults to ``${CMAKE_CURRENT_SOURCE_DIR}``
 
 ``<nameSpace>`` is the name space for the target alias. Outside users will use library as ``<nameSpace>::<target>``.
 This should match the value set in :cmake:command:`LibraryManager_Export`.
+If specified, the target name for the library is ``<nameSpace>-<target>``, to ensure that namespacing occurs on the library file name to avoid possible conflicts.
 Default:  no namespacing is used.
 
 ``SOURCES`` is followed by a list of source files, which will be appended to
@@ -219,13 +220,18 @@ Default:  no namespacing is used.
 function(LibraryManager_Add target)
     cmake_parse_arguments("ARG" "INTERFACE" "NAMESPACE;INCLUDE_DIR" "" ${ARGN})
 
+    if (DEFINED ARG_NAMESPACE)
+        set(target_ "${target}")
+        set(target "${ARG_NAMESPACE}-${target}")
+    endif ()
     if (ARG_INTERFACE)
         add_library(${target} INTERFACE)
     else ()
         add_library(${target})
     endif ()
     if (DEFINED ARG_NAMESPACE)
-        add_library(${ARG_NAMESPACE}::${target} ALIAS ${target})
+        add_library(${target_} ALIAS ${target})
+        add_library(${ARG_NAMESPACE}::${target_} ALIAS ${target})
         set_target_properties(${target} PROPERTIES __LibraryManager_NameSpace "${ARG_NAMESPACE}")
     endif ()
 
