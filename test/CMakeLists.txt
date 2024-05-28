@@ -84,3 +84,12 @@ if (TARGET Eigen3::Eigen)
     gtest_discover_tests(testeigen)
     add_test(testeigen testeigen)
 endif ()
+
+LibraryManager_Add(lib NAMESPACE molpro molpro/lib.cpp molpro/lib.h)
+target_sources(lib PUBLIC molpro/lib.h)
+target_sources(lib PRIVATE molpro/lib.cpp)
+
+add_executable(testlib testlib.cpp)
+target_link_libraries(testlib PRIVATE molpro::lib gmock_main)
+gtest_discover_tests(testlib)
+add_test(testlib testlib)

@@ -227,6 +227,7 @@ function(LibraryManager_Add target)
     if (DEFINED ARG_NAMESPACE)
         add_library(${ARG_NAMESPACE}::${target} ALIAS ${target})
         set_target_properties(${target} PROPERTIES __LibraryManager_NameSpace "${ARG_NAMESPACE}")
+        set_target_properties(${target} PROPERTIES OUTPUT_NAME "${ARG_NAMESPACE}-${target}")
     endif ()
 
     if (DEFINED ARG_UNPARSED_ARGUMENTS)
