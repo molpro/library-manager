@@ -71,7 +71,7 @@ target_link_libraries(testblaslapack PRIVATE BLAS::BLAS libtestlapack gmock_main
 gtest_discover_tests(testblaslapack)
 add_test(testblaslapack testblaslapack)
 
-find_package(Eigen3 3.3 NO_MODULE)
+find_package(Eigen3 3.3...<6 NO_MODULE)
 if (TARGET Eigen3::Eigen)
     print_target_properties(Eigen3::Eigen)
     add_executable(testeigen testeigen.cpp)
