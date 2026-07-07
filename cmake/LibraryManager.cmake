@@ -166,7 +166,7 @@ PROJECT_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
 PROJECT_VERSION_MINOR=${PROJECT_VERSION_MINOR}
 PROJECT_VERSION_PATCH=${PROJECT_VERSION_PATCH}
 PROJECT_VERSION_FULL=${PROJECT_VERSION_FULL}
-")
+            ")
     if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build" FORCE)
         set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
@@ -747,6 +747,7 @@ function(LibraryManager_Install target)
     # Install public headers one at a time
     get_property(baseDirs TARGET ${target} PROPERTY __LibraryManager_IncludeBaseDir)
     foreach (src IN LISTS pubHead)
+        message("src: ${src}")
         if (NOT IS_ABSOLUTE "${src}")
             message(WARNING "header=${src}, not specified as absolute path and cannot be installed. Make sure it was add with LibraryManager_Append.")
             continue()
@@ -781,7 +782,7 @@ endfunction()
 function(__LibraryManager_chooseBaseDir src baseDirs out)
     set(matched "")
     foreach (dir IN LISTS baseDirs)
-        string(REGEX REPLACE "([.+*?^$()\\[\\]{}|\\\\])" "\\\\\\1" dir_escaped "${dir}")
+        string(REGEX REPLACE "([.+*?^$(){}|\\\\])" "\\\\\\1" dir_escaped "${dir}")
         if ("${src}" MATCHES "^${dir_escaped}")
             list(APPEND matched "${dir}")
         endif ()
