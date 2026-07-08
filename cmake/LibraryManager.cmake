@@ -747,7 +747,6 @@ function(LibraryManager_Install target)
     # Install public headers one at a time
     get_property(baseDirs TARGET ${target} PROPERTY __LibraryManager_IncludeBaseDir)
     foreach (src IN LISTS pubHead)
-        message("src: ${src}")
         if (NOT IS_ABSOLUTE "${src}")
             message(WARNING "header=${src}, not specified as absolute path and cannot be installed. Make sure it was add with LibraryManager_Append.")
             continue()
